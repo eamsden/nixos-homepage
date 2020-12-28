@@ -126,6 +126,7 @@ rec {
 
               "NIXOS_AMIS=${nixosAmis}"
               "NIXOS_COMMON_STYLES=${nixos-common-styles.packages."${system}".commonStyles}"
+              "NIXOS_SITE_STYLES=${siteStyles}"
               "NIX_PILLS_MANUAL_IN=${nixPills}/share/doc/nix-pills"
               "NIX_DEV_MANUAL_IN=${nix-dev.defaultPackage.x86_64-linux}/html"
 
@@ -154,6 +155,7 @@ rec {
 
             export NIXOS_AMIS="${nixosAmis}"
             export NIXOS_COMMON_STYLES="${nixos-common-styles.packages."${system}".commonStyles}"
+            export NIXOS_SITE_STYLES=""
             export NIX_PILLS_MANUAL_IN="${nixPills}/share/doc/nix-pills"
             export NIX_DEV_MANUAL_IN="${nix-dev.defaultPackage.x86_64-linux}/html"
 

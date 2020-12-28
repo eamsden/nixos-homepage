@@ -196,16 +196,17 @@ update: blogs.xml
 endif
 
 # The nix-built site will use the provided SITE_STYLES
-ifeq ($(strip $(SITE_STYLES)),)
+ifeq ($(strip $(NIXOS_SITE_STYLES)),)
 # But development `make` builds will nix-build.
 styles: $(wildcard site-styles/*)
 	nix build ./#packages.x86_64-linux.siteStyles \
+		--experimental-features 'nix-command flakes' \
 		--no-update-lock-file \
 		--no-write-lock-file \
 		--out-link $@
 else
 styles:
-	@ln -sfn $(SITE_STYLES) $@
+	@ln -sfn $(NIXOS_SITE_STYLES) $@
 endif
 
 all: manuals
