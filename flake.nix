@@ -1,4 +1,4 @@
-{
+rec {
   description = "The nixos.org homepage";
 
   # This is used to build the site.
@@ -62,7 +62,13 @@
         (builtins.toJSON (
           import (released-nixpkgs-stable + "/nixos/modules/virtualisation/ec2-amis.nix")));
 
-      serve = pkgs.writeShellScriptBin "serve" ''python ${toString ./.}/scripts/run.py'';
+      serve =
+        let
+          pythonEnv = pkgs.python3.buildEnv.override {
+            extraLibs = with pkgs.python3Packages; [ click livereload ];
+          };
+        in
+          pkgs.writeShellScriptBin "serve" ''exec "${pythonEnv}/bin/python" "${toString ./.}/scripts/run.py" "$@"'';
 
     in rec {
       defaultPackage."${system}" = packages."${system}".homepage;
@@ -87,7 +93,7 @@
               libxml2
               libxslt
               linkchecker
-              nix
+              nixFlakes
               perl
               perlPackages.AppConfig
               perlPackages.JSON
@@ -95,7 +101,6 @@
               perlPackages.TemplatePluginJSONEscape
               perlPackages.TemplateToolkit
               perlPackages.XMLSimple
-              python3Packages.livereload
               serve
               xhtml1
               xidel
@@ -120,7 +125,7 @@
               "NIXOS_UNSTABLE_SERIES=${pkgs-unstable.lib.trivial.release}"
 
               "NIXOS_AMIS=${nixosAmis}"
-              "SITE_STYLES=${siteStyles}"
+              "NIXOS_COMMON_STYLES=${nixos-common-styles.packages."${system}".commonStyles}"
               "NIX_PILLS_MANUAL_IN=${nixPills}/share/doc/nix-pills"
               "NIX_DEV_MANUAL_IN=${nix-dev.defaultPackage.x86_64-linux}/html"
 
@@ -148,7 +153,7 @@
             export NIXOS_UNSTABLE_SERIES="${pkgs-unstable.lib.trivial.release}"
 
             export NIXOS_AMIS="${nixosAmis}"
-            # SITE_STYLES skipped by design.
+            export NIXOS_COMMON_STYLES="${nixos-common-styles.packages."${system}".commonStyles}"
             export NIX_PILLS_MANUAL_IN="${nixPills}/share/doc/nix-pills"
             export NIX_DEV_MANUAL_IN="${nix-dev.defaultPackage.x86_64-linux}/html"
 
