@@ -23,7 +23,6 @@ jobs:
       run: |
         nix-env -iA nixpkgs.nixFlakes
         echo 'experimental-features = nix-command flakes' | sudo tee -a /etc/nix/nix.conf
-        --experimental-features nix-command
         nix --version
         cat /etc/nix/nix.conf
         echo "$HOME/.nix-profile/bin" >> $GITHUB_PATH
